@@ -21,3 +21,8 @@ mvn clean package
 
 ### Main Class
 * web.WebApi
+
+### ToDo
+- [ ] Akka to Akka Remote/Cluster
+- [ ] support more job type
+- [ ] More Unit test
