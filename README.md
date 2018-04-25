@@ -77,6 +77,7 @@ like:
 * Monitor some database.
 * Refresh some setting.
 * Put some data into Apache Kafka, if Kafka Actor is implemented.
+* ...
 
 ### ToDo
 - [ ] Akka to Akka Remote/Cluster for HA
