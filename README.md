@@ -4,3 +4,20 @@
 # SQLScheduler
 Scheduler for running command on timer.
 ![Arch for SQLScheduler](https://github.com/dubin555/SQLScheduler/blob/master/png/SQLSchedulerArch.png)
+## Install
+### Requirement
+* Apache Phoenix
+* MySQL
+* Java 8
+
+### Compile
+```bash
+mvn clean package
+```
+
+### Change the config file
+* MySQL setting
+* Concurrent setting
+
+### Main Class
+* web.WebApi
