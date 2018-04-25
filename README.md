@@ -61,11 +61,6 @@ e.g.
 ```
 It will be scheduled to run as you want.
 
-For more usage, you may get a lot to do.
-like:
-* Monitor some database.
-* Refresh some setting.
-* Put some data into Apache Kafka, if Kafka Actor is implemented.
 #### Supported URI
 | URI        |  Method           |  detail |
 | ------------- |:-------------:| -----:|
@@ -74,7 +69,14 @@ like:
 | job/jobId | Get      |    Get the job with jobId |
 | job/jobId | Delete      |    Delete the job with jobId |
 | job/category | Get      |    Get the jobs with the category |
-| job/jobId | Delete      |    Delete the jobs with the category |
+| job/category | Delete      |    Delete the jobs with the category |
+
+### More to go
+For more usage, you may get a lot to do.
+like:
+* Monitor some database.
+* Refresh some setting.
+* Put some data into Apache Kafka, if Kafka Actor is implemented.
 
 ### ToDo
 - [ ] Akka to Akka Remote/Cluster for HA
