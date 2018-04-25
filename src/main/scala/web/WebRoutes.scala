@@ -2,9 +2,9 @@ package web
 
 import akka.actor.{ActorRef, ActorSystem}
 import akka.event.Logging
+import akka.http.scaladsl.model.{StatusCode, StatusCodes}
 import akka.pattern.ask
 import akka.util.Timeout
-
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.MethodDirectives.post
@@ -13,9 +13,7 @@ import akka.http.scaladsl.server.directives.PathDirectives.path
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
-
 import spray.json.JsValue
-
 import util.JsonUtil
 import web.JobsWebActor._
 
@@ -48,7 +46,7 @@ trait WebRoutes extends JsonSupport {
     get {
       path("jobs") {
         val getAllJobsResponse: Future[GetAllJobsResponse] = (jobsWebActor ? GetAllJobsRequest()).mapTo[GetAllJobsResponse]
-        complete(Await.result(getAllJobsResponse, Duration.Inf).allJobs)
+        complete(StatusCodes.OK -> Await.result(getAllJobsResponse, Duration.Inf).allJobs)
       }
     }
 
@@ -60,13 +58,13 @@ trait WebRoutes extends JsonSupport {
           val jobStr = job.toString
 
           // job json define not reasonable
-          if (!JsonUtil.isJobRequestJsonReasonable(jobStr)) complete("job json define not reasonable")
+          if (!JsonUtil.isJobRequestJsonReasonable(jobStr)) complete(StatusCodes.NotAcceptable -> "job json define not reasonable")
 
           val jobJson = JsonUtil.getJsonTasksDefineFromJson(jobStr)
           val notAcceptedJob = Job(jobJson.starttime, jobJson.freq, jobJson.category, jobStr)
           val createJobResponse: Future[CreateJobResponse] = (jobsWebActor ? CreateJobRequest(notAcceptedJob)).mapTo[CreateJobResponse]
 
-          complete(Await.result(createJobResponse, Duration.Inf).detail)
+          complete(StatusCodes.Created -> Await.result(createJobResponse, Duration.Inf).detail)
         }
       }
     }
@@ -78,12 +76,12 @@ trait WebRoutes extends JsonSupport {
         get {
           val getJobResponse: Future[GetJobResponse] = (jobsWebActor ? GetJobRequest(jobId)).mapTo[GetJobResponse]
           val jobResponse = Await.result(getJobResponse, Duration.Inf)
-          complete(jobResponse.acceptedJobOption)
+          complete(StatusCodes.OK -> jobResponse.acceptedJobOption)
         } ~
         delete {
           val deleteJobResponse: Future[DeleteJobResponse] = (jobsWebActor ? DeleteJobRequest(jobId)).mapTo[DeleteJobResponse]
 
-          complete(Await.result(deleteJobResponse, Duration.Inf).result)
+          complete(StatusCodes.OK -> Await.result(deleteJobResponse, Duration.Inf).result)
         }
       }
     }
@@ -94,12 +92,12 @@ trait WebRoutes extends JsonSupport {
       path(Segment) {category =>
         get {
           val getCategoryResponse: Future[GetCategoryResponse] = (jobsWebActor ? GetCategoryRequest(category)).mapTo[GetCategoryResponse]
-          complete(Await.result(getCategoryResponse, Duration.Inf).jobsInCategory)
+          complete(StatusCodes.OK -> Await.result(getCategoryResponse, Duration.Inf).jobsInCategory)
         } ~
         delete {
           val deleteCategoryResponse: Future[DeleteCategoryResponse] = (jobsWebActor ? DeleteCategoryRequest(category)).mapTo[DeleteCategoryResponse]
 
-          complete(Await.result(deleteCategoryResponse, Duration.Inf).detail)
+          complete(StatusCodes.OK -> Await.result(deleteCategoryResponse, Duration.Inf).detail)
         }
       }
     }
